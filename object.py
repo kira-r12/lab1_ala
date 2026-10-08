@@ -34,5 +34,10 @@ def stretch(X, a, b):
     print(f"Stretch: {transformation}")
     return (transformation @ X.T).T
 
+def  shear(X,a,b):
+    X = X.copy()
+    transformation = np.array([[1, a], [b, 1]])
+    print(f"Shear: {transformation}")
+    return (transformation @ X.T).T
 
 
