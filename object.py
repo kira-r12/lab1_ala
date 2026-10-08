@@ -25,3 +25,14 @@ plt.ylabel('Y')
 plt.grid(True)
 
 plt.show()
+
+#functions
+
+def stretch(X, a, b):
+    X = X.copy()
+    transformation = np.array([[a,0],[0,b]])
+    print(f"Stretch: {transformation}")
+    return (transformation @ X.T).T
+
+
+
