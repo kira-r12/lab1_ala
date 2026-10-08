@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 lynx = np.array([
 [209.70, 368.42], [157.63, 332.16], [118.82, 284.21], [80.95, 224.56], [43.08, 244.44], [20.36, 266.67], [-4.26, 293.57], [2.37, 263.16], [-20.36, 292.40], [-39.29, 299.42], [-21.30, 259.65],
@@ -158,4 +159,69 @@ plt.show()
 
 
 #3 task
+def rotate_xy (X, alpha):
+    X = X.copy()
+    transformation = np.array([
+        [np.cos(alpha), np.sin(-alpha), 0],
+        [np.sin(alpha), np.cos(alpha), 0], [0,0,1]])
+    print(f"Rotation xy:\n{transformation}")
+    return (transformation @ X.T).T
 
+def rotate_yz (X, alpha):
+    X = X.copy()
+    transformation = np.array([[1,0,0],
+                              [0, np.cos(alpha), np.sin(-alpha)],
+                              [0, np.sin(alpha), np.cos(alpha)]])
+    print(f"Rotation yz:\n{transformation}")
+    return (transformation @ X.T).T
+
+def rotate_xz (X, alpha):
+    X = X.copy()
+    transformation = np.array([[np.cos(alpha),0, np.sin(-alpha)],
+                              [0, 1, 0],
+                              [np.sin(alpha), 0, np.cos(alpha)]])
+    print(f"Rotation xz:\n{transformation}")
+    return (transformation @ X.T).T
+
+
+def read_off(file):
+    with open(file, 'r') as f:
+        if 'OFF' != f.readline().strip():
+            raise ValueError('Not a valid OFF header')
+
+        n_verts, n_faces, _ = map(int, f.readline().strip().split())
+
+        verts = [list(map(float, f.readline().strip().split())) for _ in range(n_verts)]
+        faces = [list(map(int, f.readline().strip().split()[1:])) for _ in range(n_faces)]
+
+        return np.array(verts), faces
+
+def plot_off(vertices, faces, title = '3D Model'):
+        fig = plt.figure(figsize=(6, 6))
+        ax = fig.add_subplot(111, projection='3d')
+        mesh = Poly3DCollection([vertices[face] for face in faces], alpha=0.3, edgecolor='k')
+        ax.add_collection3d(mesh)
+        ax.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2], s=2, c='r')
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_zlabel("Z")
+        ax.set_title(title)
+
+        ax.auto_scale_xyz(vertices[:, 0], vertices[:, 1], vertices[:, 2])
+        plt.show()
+file_name = 'airplane_0005.off'
+vertices, faces = read_off(file_name)
+vertices = vertices - vertices.mean(axis=0)
+
+plot_off(vertices, faces, title="Original 3D Model")
+
+alpha_3d = np.pi / 4
+
+vertices_xy = rotate_xy(vertices, alpha_3d)
+plot_off(vertices_xy, faces, title="Rotated XY")
+
+vertices_yz = rotate_yz(vertices, alpha_3d)
+plot_off(vertices_yz, faces, title="Rotated YZ")
+
+vertices_xz = rotate_xz(vertices, alpha_3d)
+plot_off(vertices_xz, faces, title="Rotated XZ")
