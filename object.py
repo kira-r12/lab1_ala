@@ -55,9 +55,62 @@ def rotation(X, alpha):
     print(f"Rotation:\n{transformation}")
     return (transformation @ X.T).T
 
+#
+# def show(result, title, color, position):
+#     plt.subplot(2, 2, position)
+#     plt.plot(lynx[:, 0], lynx[:, 1], color='gray', lw=0.8, ls='--')
+#     plt.plot(result[:, 0], result[:, 1], color=color)
+#     plt.fill(result[:, 0], result[:, 1], color=color, alpha=0.3)
+#     plt.axhline(0, color='black', lw=0.6)
+#     plt.axvline(0, color='black', lw=0.6)
+#     plt.axis('equal')
+#     plt.xlabel('X')
+#     plt.ylabel('Y')
+#     plt.title(title)
+#     plt.grid(True)
+#
+#
+# plt.figure(figsize=(12, 12))
+# plt.suptitle('Stretch', fontsize=16)
+# show(stretch(lynx, 1.5, 0.7), 'Stretch (1.5, 0.7)', 'blue', 1)
+# show(stretch(lynx, 2, 2), 'Stretch (2, 2)', 'blue', 2)
+# show(stretch(lynx, 0.5, 1), 'Stretch (0.5, 1)', 'blue', 3)
+# show(stretch(lynx, -1, 1), 'Stretch (-1, 1)', 'blue', 4)
+# plt.tight_layout()
+# plt.show()
+#
+# plt.figure(figsize=(12, 12))
+# plt.suptitle('Shear', fontsize=16)
+# show(shear(lynx, 0.5, 0), 'Shear (0.5, 0)', 'green', 1)
+# show(shear(lynx, 0, 0.5), 'Shear (0, 0.5)', 'green', 2)
+# show(shear(lynx, 0.5, 0.5), 'Shear (0.5, 0.5)', 'green', 3)
+# show(shear(lynx, 1, 1), 'Shear (1, 1)', 'green', 4)
+# plt.tight_layout()
+# plt.show()
+#
+# plt.figure(figsize=(12, 12))
+# plt.suptitle('Reflection', fontsize=16)
+# show(reflection(lynx, 1, 0), 'Reflection (1, 0)', 'red', 1)
+# show(reflection(lynx, 0, 1), 'Reflection (0, 1)', 'red', 2)
+# show(reflection(lynx, 1, 1), 'Reflection (1, 1)', 'red', 3)
+# show(reflection(lynx, 1, 2), 'Reflection (1, 2)', 'red', 4)
+# plt.tight_layout()
+# plt.show()
+#
+# plt.figure(figsize=(12, 12))
+# plt.suptitle('Rotation', fontsize=16)
+# show(rotation(lynx, np.pi / 6), 'Rotation (30)', 'orange', 1)
+# show(rotation(lynx, np.pi / 2), 'Rotation (90)', 'orange', 2)
+# show(rotation(lynx, -np.pi / 4), 'Rotation (-45)', 'orange', 3)
+# show(rotation(lynx, np.pi), 'Rotation (180)', 'orange', 4)
+# plt.tight_layout()
+# plt.show()
 
-def show(result, title, color, position):
-    plt.subplot(2, 2, position)
+
+#2 task
+
+def show_task2(result, title, color, position):
+    plt.subplot(3, 3, position)
     plt.plot(lynx[:, 0], lynx[:, 1], color='gray', lw=0.8, ls='--')
     plt.plot(result[:, 0], result[:, 1], color=color)
     plt.fill(result[:, 0], result[:, 1], color=color, alpha=0.3)
@@ -69,39 +122,40 @@ def show(result, title, color, position):
     plt.title(title)
     plt.grid(True)
 
+plt.figure(figsize=(15, 15))
+plt.suptitle('Task 2', fontsize=16)
 
-plt.figure(figsize=(12, 12))
-plt.suptitle('Stretch', fontsize=16)
-show(stretch(lynx, 1.5, 0.7), 'Stretch (1.5, 0.7)', 'blue', 1)
-show(stretch(lynx, 2, 2), 'Stretch (2, 2)', 'blue', 2)
-show(stretch(lynx, 0.5, 1), 'Stretch (0.5, 1)', 'blue', 3)
-show(stretch(lynx, -1, 1), 'Stretch (-1, 1)', 'blue', 4)
+#Stretch -> Shear -> Rotation
+print("\nStretch -> Shear -> Rotation")
+v1_s1 = stretch(lynx, 1.5, 0.5)
+v1_s2 = shear(v1_s1, 0.5, 0)
+result_v1 = rotation(v1_s2, np.pi/4)
+show_task2(v1_s1, 'Order 1, step 1: Stretch', 'violet', 1)
+show_task2(v1_s2, 'Order 1, step 2: + Shear', 'pink', 2)
+show_task2(result_v1, 'Order 1 result: + Rotation', 'purple', 3)
+
+#Rotation -> Shear -> Stretch
+print("\nOrder 2: Rotation -> Shear -> Stretch")
+v2_s1 = rotation(lynx, np.pi/4)
+v2_s2 = shear(v2_s1, 0.5, 0)
+result_v2 = stretch(v2_s2, 1.5, 0.5)
+show_task2(v2_s1, 'Order 2, step 1: Rotation', 'violet', 4)
+show_task2(v2_s2, 'Order 2, step 2: + Shear', 'pink', 5)
+show_task2(result_v2, 'Order 2 result: + Stretch', 'purple', 6)
+
+#Shear -> Rotation -> Stretch
+print("\nShear -> Rotation -> Stretch")
+v3_s1 = shear(lynx, 0.5, 0)
+v3_s2 = rotation(v3_s1, np.pi/4)
+result_v3 = stretch(v3_s2, 1.5, 0.5)
+show_task2(v3_s1, 'Order 3, step 1: Shear', 'violet', 7)
+show_task2(v3_s2, 'Order 3, step 2: + Rotation', 'pink', 8)
+show_task2(result_v3, 'Order 3 result: + Stretch', 'purple', 9)
+
 plt.tight_layout()
 plt.show()
+# матриця не є комутативною, тому фінальний результат залежить від порядку трансформації
 
-plt.figure(figsize=(12, 12))
-plt.suptitle('Shear', fontsize=16)
-show(shear(lynx, 0.5, 0), 'Shear (0.5, 0)', 'green', 1)
-show(shear(lynx, 0, 0.5), 'Shear (0, 0.5)', 'green', 2)
-show(shear(lynx, 0.5, 0.5), 'Shear (0.5, 0.5)', 'green', 3)
-show(shear(lynx, 1, 1), 'Shear (1, 1)', 'green', 4)
-plt.tight_layout()
-plt.show()
 
-plt.figure(figsize=(12, 12))
-plt.suptitle('Reflection', fontsize=16)
-show(reflection(lynx, 1, 0), 'Reflection (1, 0)', 'red', 1)
-show(reflection(lynx, 0, 1), 'Reflection (0, 1)', 'red', 2)
-show(reflection(lynx, 1, 1), 'Reflection (1, 1)', 'red', 3)
-show(reflection(lynx, 1, 2), 'Reflection (1, 2)', 'red', 4)
-plt.tight_layout()
-plt.show()
+#3 task
 
-plt.figure(figsize=(12, 12))
-plt.suptitle('Rotation', fontsize=16)
-show(rotation(lynx, np.pi / 6), 'Rotation (30)', 'orange', 1)
-show(rotation(lynx, np.pi / 2), 'Rotation (90)', 'orange', 2)
-show(rotation(lynx, -np.pi / 4), 'Rotation (-45)', 'orange', 3)
-show(rotation(lynx, np.pi), 'Rotation (180)', 'orange', 4)
-plt.tight_layout()
-plt.show()
