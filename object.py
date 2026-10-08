@@ -34,10 +34,24 @@ def stretch(X, a, b):
     print(f"Stretch: {transformation}")
     return (transformation @ X.T).T
 
-def  shear(X,a,b):
+def shear(X,a,b):
     X = X.copy()
     transformation = np.array([[1, a], [b, 1]])
     print(f"Shear: {transformation}")
     return (transformation @ X.T).T
 
+def reflection(X,a,b):
+    X = X.copy()
+    multiplier = a**2 + b**2
+    transformation = (1/multiplier) * np.array([[a**2-b**2, 2*a*b],
+                                                [2*a*b, b**2-a**2]])
+    print(f"Reflection: {transformation}")
+    return (transformation @ X.T).T
+
+def rotation(X, alpha):
+    X = X.copy()
+    transformation = np.array([[np.cos(alpha), np.sin(-alpha)],
+                               [np.sin(alpha), np.cos(alpha)]])
+    print(f"Rotation: {transformation}")
+    return (transformation @ X.T).T
 
