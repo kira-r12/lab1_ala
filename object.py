@@ -9,35 +9,35 @@ lynx = np.array([
 [247.57, -359.06], [230.53, -307.60], [194.56, -238.60], [160.47, -181.29], [120.71, -149.71], [165.21, -132.16], [201.18, -100.58], [183.20, -99.42], [221.07, -73.68], [253.25, -24.56], [222.01, -23.39],
 [251.36, -1.17], [262.72, 24.56], [234.32, 25.73], [214.44, 42.11], [202.13, 60.82], [220.12, 101.75], [234.32, 160.23], [240.00, 230.41], [232.43, 316.96], [209.70, 368.42]
 ])
-
-x = lynx[:, 0]
-y = lynx[:, 1]
-
-plt.figure(figsize=(6,6))
-plt.plot(x, y, color='violet')
-plt.fill(x, y, color='violet', alpha=0.2)
-plt.axhline(0, color='black', lw=0.6)
-plt.axvline(0, color='black', lw=0.6)
-plt.axis('equal')
-plt.xlabel('X')
-plt.ylabel('Y')
-
-plt.grid(True)
-
-plt.show()
+#
+# x = lynx[:, 0]
+# y = lynx[:, 1]
+#
+# plt.figure(figsize=(6,6))
+# plt.plot(x, y, color='violet')
+# plt.fill(x, y, color='violet', alpha=0.2)
+# plt.axhline(0, color='black', lw=0.6)
+# plt.axvline(0, color='black', lw=0.6)
+# plt.axis('equal')
+# plt.xlabel('X')
+# plt.ylabel('Y')
+#
+# plt.grid(True)
+#
+# plt.show()
 
 #functions
 
 def stretch(X, a, b):
     X = X.copy()
     transformation = np.array([[a,0],[0,b]])
-    print(f"Stretch: {transformation}")
+    print(f"Stretch:\n{transformation}")
     return (transformation @ X.T).T
 
 def shear(X,a,b):
     X = X.copy()
     transformation = np.array([[1, a], [b, 1]])
-    print(f"Shear: {transformation}")
+    print(f"Shear:\n{transformation}")
     return (transformation @ X.T).T
 
 def reflection(X,a,b):
@@ -45,13 +45,63 @@ def reflection(X,a,b):
     multiplier = a**2 + b**2
     transformation = (1/multiplier) * np.array([[a**2-b**2, 2*a*b],
                                                 [2*a*b, b**2-a**2]])
-    print(f"Reflection: {transformation}")
+    print(f"Reflection:\n{transformation}")
     return (transformation @ X.T).T
 
 def rotation(X, alpha):
     X = X.copy()
     transformation = np.array([[np.cos(alpha), np.sin(-alpha)],
                                [np.sin(alpha), np.cos(alpha)]])
-    print(f"Rotation: {transformation}")
+    print(f"Rotation:\n{transformation}")
     return (transformation @ X.T).T
 
+
+def show(result, title, color, position):
+    plt.subplot(2, 2, position)
+    plt.plot(lynx[:, 0], lynx[:, 1], color='gray', lw=0.8, ls='--')
+    plt.plot(result[:, 0], result[:, 1], color=color)
+    plt.fill(result[:, 0], result[:, 1], color=color, alpha=0.3)
+    plt.axhline(0, color='black', lw=0.6)
+    plt.axvline(0, color='black', lw=0.6)
+    plt.axis('equal')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.title(title)
+    plt.grid(True)
+
+
+plt.figure(figsize=(12, 12))
+plt.suptitle('Stretch', fontsize=16)
+show(stretch(lynx, 1.5, 0.7), 'Stretch (1.5, 0.7)', 'blue', 1)
+show(stretch(lynx, 2, 2), 'Stretch (2, 2)', 'blue', 2)
+show(stretch(lynx, 0.5, 1), 'Stretch (0.5, 1)', 'blue', 3)
+show(stretch(lynx, -1, 1), 'Stretch (-1, 1)', 'blue', 4)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 12))
+plt.suptitle('Shear', fontsize=16)
+show(shear(lynx, 0.5, 0), 'Shear (0.5, 0)', 'green', 1)
+show(shear(lynx, 0, 0.5), 'Shear (0, 0.5)', 'green', 2)
+show(shear(lynx, 0.5, 0.5), 'Shear (0.5, 0.5)', 'green', 3)
+show(shear(lynx, 1, 1), 'Shear (1, 1)', 'green', 4)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 12))
+plt.suptitle('Reflection', fontsize=16)
+show(reflection(lynx, 1, 0), 'Reflection (1, 0)', 'red', 1)
+show(reflection(lynx, 0, 1), 'Reflection (0, 1)', 'red', 2)
+show(reflection(lynx, 1, 1), 'Reflection (1, 1)', 'red', 3)
+show(reflection(lynx, 1, 2), 'Reflection (1, 2)', 'red', 4)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 12))
+plt.suptitle('Rotation', fontsize=16)
+show(rotation(lynx, np.pi / 6), 'Rotation (30)', 'orange', 1)
+show(rotation(lynx, np.pi / 2), 'Rotation (90)', 'orange', 2)
+show(rotation(lynx, -np.pi / 4), 'Rotation (-45)', 'orange', 3)
+show(rotation(lynx, np.pi), 'Rotation (180)', 'orange', 4)
+plt.tight_layout()
+plt.show()
